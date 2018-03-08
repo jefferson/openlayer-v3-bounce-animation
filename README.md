@@ -6,7 +6,8 @@ Bounce animation for features pointer in openlayer v3.19.1
 1. import bounce.js in your page:
 
 ```html
-<script src="bounce.js"> </script>
+<!-- Downlonad bounce.js e import your local copy -->
+<script src="https://raw.githubusercontent.com/jefferson/openlayer-v3-bounce-animation/master/bounce.js"></script>
 ```
 
 2. Just call **feature.playBouncing** with instance of **map** and **layer** of feature.
