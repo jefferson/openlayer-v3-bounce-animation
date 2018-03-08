@@ -12,5 +12,3 @@ Just call **feature.playBouncing** with instance of **map** and **layer** of fea
 > feature.playBouncing(map, layer);
 
 ![Example 1](https://raw.githubusercontent.com/jefferson/openlayer-v3-bounce-animation/master/bounce_animation.PNG)
-
-![Example 2](https://raw.githubusercontent.com/jefferson/openlayer-v3-bounce-animation/master/bounce.PNG)
