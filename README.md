@@ -14,7 +14,7 @@ Bounce animation for features pointer in openlayer v3.19.1
 
 # Example
 ```javascript
-//*Where layer is instanceof: ol.layer.Layer 
+//where layer is instanceof: ol.layer.Layer 
  feature.playBouncing(map, layer);
  
 ```
