@@ -51,6 +51,8 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
     let listenerKey;
 
     //Direção do marcador
+    //para cima os valores são negativos
+    //para baixo os valores são positivos
     let way = { up: 1, down: -1 };
 
     //Momento em que a animação começou
@@ -94,6 +96,7 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
         this.resolution = _map.getView().getResolution();
 
         listenerKey = _map.on('postcompose', Animate, { feature: this, map: _map });
+
 
     }    
 
@@ -143,7 +146,17 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
             else
             {
                 //Atualiza a posição do marcador com a nova posição
-                this.feature.getGeometry().setCoordinates([position[0], position[1], 0]);
+                //verifica se a posição atual é maior do que a última atinginda
+                if (this.feature.upMax != undefined && position[1] > this.feature.upMax)
+                {
+                    //caso a nova posição ultrapasse os limites a última posição máxima é atribuída
+                    this.feature.getGeometry().setCoordinates([position[0], this.feature.upMax, 0]);
+                }
+                else
+                {
+                    this.feature.getGeometry().setCoordinates([position[0], position[1], 0]);
+                }
+                
             }
         }        
 
@@ -162,7 +175,7 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
 
         var styleb = new ol.style.Style({
             image: new ol.style.Circle({
-                radius: radius_b,
+                radius: Math.abs(radius_b),
                 snapToPixel: false,
                 stroke: new ol.style.Stroke({
                     color: 'rgba(255, 0, 0, ' + opacity_b + ')',
@@ -173,7 +186,7 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
 
         var stylec = new ol.style.Style({
             image: new ol.style.Circle({
-                radius: radius_c,
+                radius: Math.abs(radius_c),
                 snapToPixel: false,
                 stroke: new ol.style.Stroke({
                     color: 'rgba(255, 0, 0, ' + opacity_c + ')',
@@ -184,7 +197,7 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
 
         var style = new ol.style.Style({
             image: new ol.style.Circle({
-                radius: radius_a,
+                radius: Math.abs(radius_a),
                 snapToPixel: false,
                 stroke: new ol.style.Stroke({
                     color: 'rgba(255, 0, 0, ' + opacity_a + ')',
@@ -221,8 +234,11 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
             ol.Observable.unByKey(listenerKey);
 
             //Caso a animação esteja no estado parado a animação não irá ocorrer novamente e o marcador volta para a posição inicial
+            this.map.render();
+
             if (this.feature._stopBouncing)
             {
+
                 this.feature.getGeometry().setCoordinates(this.feature.position.getCoordinates(), false);
                 return;
             }
@@ -232,6 +248,10 @@ ol.Feature.prototype.playBouncing = function (_map, layerGroup) {
                 start = new Date().getTime();
 
                 restart = false;
+
+                //atualiza com a última posição máxima atingida
+                if (this.feature.upMax == undefined && this.feature.direction == way.up)
+                    this.feature.upMax = position[1];
 
                 this.feature.direction = this.feature.direction * way.down;
 
